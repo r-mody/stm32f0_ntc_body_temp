@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;NTC_Body_Temp/Core/Inc/retarget&apos; to &apos;retarget.h&apos;" description="Rename resource &apos;retarget&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Inc/retarget" name="retarget.h" stamp="1611022897701" updateReferences="true"/>
+</session>
