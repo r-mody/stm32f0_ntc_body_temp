@@ -10,13 +10,10 @@
 // Create to https://shawnhymel.com/1873/how-to-use-printf-on-stm32/
 #include "retarget.h"
 
-// UART2 Handler for retarget
-UART_HandleTypeDef huart2;
-
 void SystemClock_Config(void);
 
 #define BUFFER_LIMIT 3
-uint16_t adc_buff[BUFFER_LIMIT] = {0};
+uint16_t adc_buff[BUFFER_LIMIT];
 
 int main(void)
 {
@@ -30,12 +27,19 @@ int main(void)
   MX_I2C1_Init();
   MX_USART2_UART_Init();
 
+  if(HAL_ADCEx_Calibration_Start(&hadc) != HAL_OK)
+  {
+	  Error_Handler();
+  }
+
   RetargetInit(&huart2);
   printf("\r\nBegin Log Session ------- \r\n\r\n");
 
-  // Calibrate The ADC
-  //HAL_ADCEx_Calibration_Start(&hadc1);
-  HAL_ADC_Start_DMA(&hadc, (uint32_t *)adc_buff, BUFFER_LIMIT);
+  if(HAL_ADC_Start_DMA(&hadc, (uint32_t *)adc_buff, BUFFER_LIMIT) != HAL_OK)
+  {
+	  Error_Handler();
+  }
+
 
   while (1)
   {
@@ -49,9 +53,7 @@ int main(void)
 // DMA ADC Callback
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef * hadc)
 {
-	// ADC Print
-	//printf("\r\n------ ADC Cycle -------");
-	//printf("\r\nADC0 = %lu\r\nADC1 = %lu\r\nADC4 = %lu\r\n", adc_buff[0], adc_buff[1], adc_buff[2]);
+
 }
 
 void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef * hadc)
@@ -121,8 +123,10 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
+  printf("\r\n------ ERROR HAS OCCURED ------\r\n");
   while (1)
   {
+
   }
   /* USER CODE END Error_Handler_Debug */
 }
